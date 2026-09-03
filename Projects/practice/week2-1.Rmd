@@ -1,0 +1,164 @@
+---
+title: "Week2-1 Practice"
+author: "Greg T."
+date: "2026-09-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Math background: 
+
+As the sample size increases, the relative frequency
+
+$$
+\frac{\#\{X_i \le 1\}}{n}
+$$
+
+converges toward the theoretical probability
+
+$$
+P(X \le 1) = \Phi(1) \approx 0.8413.
+$$
+
+
+## Method-1 Using a for loop
+
+```{r}
+# Number of observations
+n <- 1000
+
+x <- rnorm(n, mean = 0, sd = 1)
+
+rel_freq <- numeric(n)
+count <- 0
+
+for (i in 1:n) {
+    if (x[i] < 1) {
+        count <- count + 1
+    }
+
+    rel_freq[i] <- count / i
+}
+
+plot(1:n, rel_freq,
+     type = "l",
+     xlab = "Number of Observations",
+     ylab = "Relative Frequency",
+     main = "Relative Frequency of X < 1 using For Loop")
+
+abline(h = pnorm(1), lty = 2)
+```
+## Method-2 using cumsum, similar to class
+
+
+```{r}
+set.seed(123)
+
+n <- 1000
+x <- rnorm(n)   # creates a 1-d vector of length n 
+
+# some checks what is going on
+#x
+#x<1
+
+#x<=1 creates a boolean vector where T/F indicates x<=1 condition
+#cumsum() creates numeric vector of the running total of the number of TRUE
+# / (1:n) does elementwise division to create the ecdf vector 
+relative_frequency <- cumsum(x <= 1) / (1:n)
+
+plot(1:n, relative_frequency, type = "l",
+     xlab = "Number of observations",
+     ylab = "Relative frequency of X <= 1",
+     main = "Relative Frequency Converges to Probability using vectors")
+
+
+# add a horizontal line to the existing plot.
+#pnorm(1) calculates the std normal CDF at Z=1 on the table, P(Z<=1)
+abline(h = pnorm(1), lty = 2)
+
+
+```
+```{r}
+# Sample sizes
+sample_sizes <- c(25, 100, 1000, 10000)
+
+# Set up a 2 x 2 plotting window
+par(mfrow = c(2, 2), oma = c(0, 0, 3, 0))
+
+for (n in sample_sizes) {
+
+    # Generate random observations
+    x <- rgamma(n, shape = 2, rate = 1)
+
+    # Probability histogram
+    hist(
+        x,
+        probability = TRUE,        # puts probabilities on y axis
+        breaks = 20,               # bins for plotting 
+        main = paste("n =", n),
+        xlab = "x",      
+        xlim = c(0, 10)            # all 4 graphs have same x-axis
+    )
+
+    # Add the theoretical Gamma PDF
+    curve(
+        dgamma(x, shape = 2, rate = 1),
+        add = TRUE,
+        col = "red",
+        lwd = 2
+    )
+}
+
+mtext(
+    "Probability Histograms Approaching the Gamma PDF",
+    outer = TRUE,
+    side = 3,
+    cex = 1.5
+)
+
+```
+```{r}
+sample_sizes <- c(25, 100, 1000, 10000)
+
+# Set up a 2 x 2 plotting window
+par(mfrow = c(2, 2), oma = c(0, 0, 3, 0))
+
+for (n in sample_sizes) {
+
+    # Generate a random sample
+    x <- rgamma(n, shape = 2, rate = 1)
+
+    # Plot the empirical CDF
+    plot(
+        ecdf(x),
+        main = paste("n =", n),
+        xlab = "x",
+        ylab = "CDF",
+        xlim = c(0, 10),
+        verticals = TRUE,
+        do.points = FALSE
+    )
+
+    # Add the true Gamma CDF
+    curve(
+        pgamma(x, shape = 2, rate = 1),
+        add = TRUE,
+        col = "red",
+        lwd = 2
+    )
+    
+mtext(
+    "Convergence of the ECDF to the true CDF",
+    outer = TRUE,
+    side = 3,
+    cex = 1.5
+)
+
+}
+
+```
+
+

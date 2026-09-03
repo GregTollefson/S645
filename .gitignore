@@ -11,3 +11,6 @@
 
 # Instructor-provided lecture materials
 Lectures/
+
+# Ignore .html files (normally created using Knit in R-studio)
+.html
