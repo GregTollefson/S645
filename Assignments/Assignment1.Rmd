@@ -1,0 +1,287 @@
+---
+title: "Assignment1"
+author: "Greg T."
+date: "2026-09-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Tasks for the Assignment  
+
+- Generate a random sample of size 100 from the standard normal distribution and plot the empirical quantile function for your sample. 
+- Find the true 35th and 55th quantiles of the standard normal distribution. 
+- Compute the 35th and 55th empirical quantiles from your data. Are they close to the true/theoretical ones? 
+- What would you do to get empirical quantiles closer to the theoretical ones?
+
+
+### Assignment discussion: 
+
+The empirical quantile function is closely related to the empirical cumulative distribution function (ECDF). In fact, it can be viewed as a generalized inverse of the ECDF.
+
+Suppose we have a random sample
+
+$$
+X_1, X_2, \ldots, X_n.
+$$
+
+After sorting the observations, we obtain the order statistics
+
+$$
+X_{(1)} \leq X_{(2)} \leq \cdots \leq X_{(n)}.
+$$
+
+The empirical cumulative distribution function is
+
+$$
+F_n(x)
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+I(X_i \leq x),
+$$
+
+where $I(\cdot)$ is the indicator function. The ECDF gives the proportion of observations that are less than or equal to a particular value $x$.
+
+Thus, the ECDF maps a data value to a probability:
+
+$$
+x \longmapsto F_n(x).
+$$
+
+The empirical quantile function reverses this relationship. Given a probability $p$, it returns the smallest observed value whose empirical cumulative probability is at least $p$.
+
+Formally,
+
+$$
+Q_n(p)
+=
+\inf\left\{
+x : F_n(x) \geq p
+\right\},
+\qquad 0 < p \leq 1.
+$$
+
+Therefore, the empirical quantile function maps
+
+$$
+p \longmapsto Q_n(p).
+$$
+
+For a sample of size $n$, the ECDF increases by increments of
+
+$$
+\frac{1}{n}.
+$$
+
+Consequently, the empirical quantile function can be described using the order statistics. If
+
+$$
+\frac{k-1}{n} < p \leq \frac{k}{n},
+$$
+
+then
+
+$$
+Q_n(p)=X_{(k)}.
+$$
+
+Equivalently,
+
+$$
+Q_n(p)
+=
+X_{(\lceil np \rceil)},
+$$
+
+where $\lceil np \rceil$ denotes the smallest integer greater than or equal to $np$.
+
+### Example
+
+Suppose the sorted sample is
+
+$$
+2,\;4,\;5,\;9,\;12.
+$$
+
+Here,
+
+$$
+n=5,
+$$
+
+so each observation corresponds to a probability increment of
+
+$$
+\frac{1}{5}=0.2.
+$$
+
+The empirical quantile function is therefore
+
+$$
+Q_n(p)
+=
+\begin{cases}
+2,  & 0 < p \leq 0.2,\\
+4,  & 0.2 < p \leq 0.4,\\
+5,  & 0.4 < p \leq 0.6,\\
+9,  & 0.6 < p \leq 0.8,\\
+12, & 0.8 < p \leq 1.
+\end{cases}
+$$
+
+For example,
+
+$$
+Q_n(0.35)=4
+$$
+
+because the second observation is the first value for which the ECDF reaches or exceeds $0.35$.
+
+Similarly,
+
+$$
+Q_n(0.75)=9.
+$$
+
+### Relationship to the ECDF
+
+The ECDF and empirical quantile function contain essentially the same information, but the axes are reversed.
+
+For the ECDF,
+
+$$
+x \rightarrow F_n(x),
+$$
+
+so the horizontal axis contains observed data values and the vertical axis contains cumulative probabilities.
+
+For the empirical quantile function,
+
+$$
+p \rightarrow Q_n(p),
+$$
+
+so the horizontal axis contains probabilities and the vertical axis contains observed data values.
+
+Both functions are step functions because they are constructed from a finite sample.
+
+### Plotting the empirical quantile function in R
+
+The empirical quantile function can be plotted by sorting the observations and associating them with the probability levels
+
+$$
+\frac{1}{n},
+\frac{2}{n},
+\ldots,
+\frac{n}{n}.
+$$
+
+For example:
+
+```r
+x_sorted <- sort(x)
+n <- length(x)
+
+plot(
+    (1:n) / n,
+    x_sorted,
+    type = "s",
+    xlab = "p",
+    ylab = "Empirical Quantile",
+    main = "Empirical Quantile Function"
+)
+```
+
+The vector
+
+```r
+(1:n) / n
+```
+
+constructs the empirical probability levels
+
+$$
+\frac{1}{n},\frac{2}{n},\ldots,1,
+$$
+
+while
+
+```r
+sort(x)
+```
+
+produces
+
+$$
+X_{(1)},X_{(2)},\ldots,X_{(n)}.
+$$
+
+Thus each plotted point corresponds conceptually to
+
+$$
+\left(
+\frac{k}{n},
+X_{(k)}
+\right).
+$$
+
+The step plot represents the empirical quantile function obtained from the observed sample.
+
+### Empirical versus theoretical quantiles
+
+If the sample comes from a distribution with cumulative distribution function $F(x)$, then the theoretical quantile function is
+
+$$
+Q(p)=F^{-1}(p).
+$$
+
+For example, for a standard normal distribution, the theoretical quantile function is
+
+$$
+Q(p)=\Phi^{-1}(p).
+$$
+
+In R, this is calculated using
+
+```r
+qnorm(p)
+```
+
+while empirical quantiles are obtained from the observed sample.
+
+As the sample size increases, the empirical quantile function generally becomes a better approximation to the population quantile function.
+
+
+```{r}
+
+set.seed(123)
+
+x <- rnorm(100)
+n <- length(x)
+
+plot(
+    (1:n) / n,
+    sort(x),
+    type = "s",
+    xlab = "p",
+    ylab = "Empirical Quantile",
+    main = "Empirical Quantile Function"
+)
+
+# overlay the Theoritical Normal Quantile function
+
+curve(
+    qnorm(x),
+    from = 0.001,
+    to = 0.999,
+    add = TRUE,
+    col = "red",
+    lwd = 2
+)
+
+```
+
