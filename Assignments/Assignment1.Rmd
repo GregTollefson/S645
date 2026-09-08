@@ -285,3 +285,69 @@ curve(
 
 ```
 
+
+```{r}
+
+x_sorted <- sort(x)
+#cat("vector length is", n, "\n")
+q_55 <- x_sorted[ceiling(0.55 * n)] #return the 55th element of the sorted vector 
+cat("Emperical Q_55 = ", q_55, "\n")
+cat("Analytic Q_55", qnorm(.55), "\n\n")
+
+q_35 <- x_sorted[ceiling(0.35 * n)] # return the 35th element of the sorted vector. 
+cat("Emperical Q_35 = ", q_35, "\n")
+cat("Analytic Q_35", qnorm(.35), "\n")
+
+```
+```{r}
+
+set.seed(123)
+
+x <- rnorm(1000)
+n <- length(x)
+
+plot(
+    (1:n) / n,
+    sort(x),
+    type = "s",
+    xlab = "p",
+    ylab = "Empirical Quantile",
+    main = "Empirical Quantile Function"
+)
+
+# overlay the Theoritical Normal Quantile function
+
+curve(
+    qnorm(x),
+    from = 0.001,
+    to = 0.999,
+    add = TRUE,
+    col = "red",
+    lwd = 2
+)
+```
+
+```{r}
+
+x_sorted <- sort(x)
+# cat("vector length is", n, "\n")
+q_55 <- x_sorted[ceiling(0.55 * n)]  # return the 550th element of the sorted vector
+cat("Emperical Q_55 = ", q_55, "\n")
+cat("Analytic Q_55", qnorm(.55), "\n\n")
+
+q_35 <- x_sorted[ceiling(0.35 * n)]  # return the 350th element of the sorted vector
+cat("Emperical Q_35 = ", q_35, "\n")
+cat("Analytic Q_35", qnorm(.35), "\n")
+
+```
+
+
+
+
+
+
+
+
+
+
+
