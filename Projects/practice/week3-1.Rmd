@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+author: "GregT"
+date: "2026-09-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+# Number of observations
+n <- 1000
+
+# Generate iid observations from N(5, 4)
+set.seed(123)
+x <- rnorm(n, mean = 5, sd = 2)  # use sqrt(4), rnorm takes the standard deviation
+
+# Compute the running sample mean
+x_mean <- cumsum(x) / (1:n)  # element wise vector division
+
+# Plot the running sample mean
+plot(1:n, x_mean,
+     type = "l",
+     xlab = "n",
+     ylab = "Running Sample Mean",
+     main = "Convergence of Sample Mean")
+
+# Add the true population mean
+abline(h = 5, col = "red", lwd = 2)
+
+```
+
