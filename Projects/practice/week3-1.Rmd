@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Week3 In Class Work "
 author: "GregT"
 date: "2026-09-08"
 output: html_document
@@ -11,9 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r}
 # Number of observations
@@ -37,4 +35,112 @@ plot(1:n, x_mean,
 abline(h = 5, col = "red", lwd = 2)
 
 ```
+
+
+
+
+```{r}
+sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
+
+epsilon <- 0.25
+sim_size <- 10000
+
+# One probability for each sample size
+# numeric(length(sample_size)) creates a numeric vector of length 8, initialized w/zeros
+# the prob_outlier vector is needed graphing (y-axis)
+prob_outlier <- numeric(length(sample_size))
+
+
+# loop over the sample size vector, this is the x-axis in the graph 
+for (i in 1:length(sample_size)) {
+
+  n <- sample_size[i]  
+
+  outlier <- logical(sim_size)  # initialize a boolean vector length sim_size
+  
+  # Create the x vector and set the T/F condition based on exceeding epsilon 
+  for (j in 1:sim_size) {
+
+    x <- rnorm(n, mean = 5, sd = 2)
+    x_bar <- mean(x)  
+
+    outlier[j] <- abs(x_bar - 5) > epsilon
+  }
+
+  prob_outlier[i] <- mean(outlier)  #also could be: sum(outlier)/sim_size 
+
+  cat(
+    "n =", n,
+    " probability =", prob_outlier[i],
+    "\n"
+  )
+}
+
+plot(
+  sample_size,
+  prob_outlier,
+  type = "b",
+  xlab = "Sample Size (n)",
+  ylab = "P(|Xbar - 5| > 0.25)",
+  main = "Convergence in Probability"
+)
+
+
+
+```
+
+
+
+```{r}
+#sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
+sample_size <- c(5, 50, 200,1000)
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0)
+)
+
+
+sim_size <- 10000
+mean_vector <- numeric(sim_size)
+
+for (i in 1:length(sample_size)){
+  
+  n = sample_size[i]
+  
+  for (j in 1:sim_size){
+    x = rexp(n=n, rate = 1)
+    x_bar = mean(x)
+    mean_vector[j] <- x_bar
+    
+  }
+  
+  hist(
+    mean_vector,
+    probability = TRUE,
+    main = paste("n =", n),
+    xlab = "x",
+    xlim = c(0, 2.5)
+  )
+  
+  curve(
+    dnorm(x, mean = 1, sd = 1 / sqrt(n)),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+  
+  
+}
+
+mtext(
+    "Central Limit Theorem Simulation",
+    outer = TRUE,
+    side = 3,
+    line = 1,
+    cex = 1.5,
+    font = 2
+  )
+```
+
 
