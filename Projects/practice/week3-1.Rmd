@@ -28,7 +28,7 @@ x_mean <- cumsum(x) / (1:n)  # element wise vector division
 plot(1:n, x_mean,
      type = "l",
      xlab = "n",
-     ylab = "Running Sample Mean",
+     ylab = "Runqning Sample Mean",
      main = "Convergence of Sample Mean")
 
 # Add the true population mean
@@ -49,6 +49,7 @@ sim_size <- 10000
 # numeric(length(sample_size)) creates a numeric vector of length 8, initialized w/zeros
 # the prob_outlier vector is needed graphing (y-axis)
 prob_outlier <- numeric(length(sample_size))
+count_outlier <- numeric(length(sample_size))
 
 
 # loop over the sample size vector, this is the x-axis in the graph 
@@ -62,20 +63,45 @@ for (i in 1:length(sample_size)) {
   for (j in 1:sim_size) {
 
     x <- rnorm(n, mean = 5, sd = 2)
-    x_bar <- mean(x)  
+    x_bar <- mean(x)                  # could replace with mean(rnorm(n,5,2))
 
     outlier[j] <- abs(x_bar - 5) > epsilon
-  }
+  } # end of the simulaton loop
 
-  prob_outlier[i] <- mean(outlier)  #also could be: sum(outlier)/sim_size 
+  # Store results
+  count_outlier[i] <- sum(outlier)
+  prob_outlier[i] <- mean(outlier)
 
   cat(
     "n =", n,
-    " probability =", prob_outlier[i],
+    "count exceeds epsilon =", count,
+    " outlier probability =", prob_outlier[i],
     "\n"
   )
-}
+} # end of the sample size loop 
 
+# Create results table
+results <- data.frame(
+  n = sample_size,
+  count_exceeds_epsilon = count_outlier,
+  outlier_probability = prob_outlier
+)
+
+# Display table
+knitr::kable(
+  results,
+  digits = 4,
+  col.names = c(
+    "n",
+    "Count",
+    "Probability"
+  ),
+  caption = "Convergence in Probability Simulation",
+  escape = FALSE
+)
+
+
+# Plot results
 plot(
   sample_size,
   prob_outlier,
@@ -85,10 +111,11 @@ plot(
   main = "Convergence in Probability"
 )
 
-
+```
+```{r}
+replicate(10, mean(rnorm(100, 5, 2)))
 
 ```
-
 
 
 ```{r}
