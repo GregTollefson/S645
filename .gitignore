@@ -14,3 +14,7 @@ Lectures/
 
 # Ignore .html files (normally created using Knit in R-studio)
 *.html
+
+# Ignore .tex and .log files, generated when prepping docs
+*.log
+*.tex
