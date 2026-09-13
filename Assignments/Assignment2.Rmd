@@ -1,0 +1,138 @@
+---
+title: "Assignment2"
+author: "Greg T."
+date: "2026-09-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1: Probability as Relative Frequency
+
+We will use relative frequency to approximate the probability that an observation from a standard normal distribution falls between 1 and 2. This is similar to a simulation we did in class in Week 2.
+
+* Generate random samples of sizes \(10\), \(50\), \(100\), and \(1000\) from the standard normal distribution.
+* For each sample, compute the relative frequency of observations between \(1\) and \(2\).
+* Compute the theoretical (exact) probability that an observation from a standard normal distribution falls between \(1\) and \(2\).
+* What happens to the accuracy of the relative-frequency approximation of the probability as the sample size increases? Write 1–2 sentences that are concise and directly answer the question.
+
+
+
+```{r}
+sample_size <- c(10, 50, 100, 1000)
+
+upper_limit <- 2
+lower_limit <- 1
+
+prob_slice <- numeric(length(sample_size))
+count_slice <- numeric(length(sample_size))
+
+for (i in 1:length(sample_size)) {
+
+  n <- sample_size[i]
+
+  # Generate n observations from N(0,1)
+  x <- rnorm(n, mean = 0, sd = 1)
+
+  # Logical vector: TRUE if observation is between 1 and 2
+  in_slice <- logical(n)
+
+  for (j in 1:n) {
+
+    in_slice[j] <- (x[j] < upper_limit && x[j] > lower_limit)
+
+  }
+
+  count_slice[i] <- sum(in_slice)
+  prob_slice[i]  <- mean(in_slice)
+
+  cat(
+    "n =", n,
+    "count within UL and LL =", count_slice[i],
+    "relative frequency =", prob_slice[i],
+    "\n"
+  )
+  
+ 
+
+}
+
+ exact_prob <- pnorm(2) - pnorm(1)
+
+  results <- data.frame(
+    n = sample_size,
+    count = count_slice,
+    relative_frequency = prob_slice,
+    exact_probability = exact_prob,
+    error = prob_slice - exact_prob
+  )
+
+results
+
+```
+
+## Task 2: Histogram as an Approximation of the Probability Density Function (PDF)
+
+We will investigate how the sample size (number of simulated observations) changes the approximation of the probability density function (PDF) using a histogram.
+
+* Generate random samples of sizes \(10\), \(50\), \(100\), and \(1000\) from the standard normal distribution.
+* Plot a probability histogram for each sample. Plot all four histograms on one plotting page (see the code from lectures).
+* Add the standard normal PDF curve to each histogram. In your homework solution, include only one plot: the plot containing the histograms and PDF curves.
+* A histogram is an approximation of the PDF. How does the accuracy of this approximation change as the sample size increases? Write 1–2 sentences that are concise and directly answer the question.
+* Now think of probability as the area under the PDF curve. These theoretical areas (probabilities) are approximated by relative frequencies, which correspond to areas under the histogram. How does the accuracy of the relative frequencies (areas under the histogram) as approximations of probability change as the sample size increases?
+
+
+
+```{r}
+sample_size <- c(10, 50, 100, 1000)
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0),
+  mar = c(4, 4, 3, 1), 
+  las = 1
+)
+
+# Same histogram bins for every panel
+hist_breaks <- seq(-6, 6, by = 0.5)
+
+for (i in 1:length(sample_size)) {
+
+  n <- sample_size[i]
+
+  # Standard normal
+  x <- rnorm(n, mean = 0, sd = 1)
+
+  hist(
+    x,
+    probability = TRUE,
+    breaks = hist_breaks,
+    main = paste("n =", n),
+    xlab = "x",
+    ylab = "Density",
+    xlim = c(-4, 4),
+    ylim = c(0, 0.7)
+  )
+
+  curve(
+    dnorm(x, mean = 0, sd = 1),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+mtext(
+  "Histogram Approximation of the Standard Normal PDF",
+  outer = TRUE,
+  side = 3,
+  line = 1,
+  cex = 1.4,
+  font = 2
+)
+
+```
+
+
