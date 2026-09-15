@@ -1,4 +1,4 @@
----
+x---
 title: "week4-1"
 author: "Greg T."
 date: "2026-09-15"
@@ -85,7 +85,38 @@ mtext(
 
 
 
-```{r pressure, echo=FALSE}
+```{r}
+
+sample_size = c(10,50,100,1000)
+n = 100
+sim_size = 10000
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0),
+  mar = c(4, 4, 3, 1), 
+  las = 1
+)
+
+for (i in 1:length(sample_size)){
+  n <- sample_size[i]
+
+for (j in 1:sim_size){
+
+  x <- rnorm(n,5,2)
+  xbar[j] <- mean(x)
+
+
+}
+
+  hist(xbar,
+       probability = TRUE,
+       breaks = 100,
+       xlim = c(2,9),
+       main = paste("n = ",n)
+       )
+  
+}
 
 ```
 
