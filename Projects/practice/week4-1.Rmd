@@ -1,0 +1,92 @@
+---
+title: "week4-1"
+author: "Greg T."
+date: "2026-09-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+In class work for Week-4
+
+```{r}
+n_values <- c(1, 5, 20, 100)
+B <- 10000
+
+colors <- c("blue", "green", "orange", "purple")
+
+# Set up an empty plot
+plot(
+  NA,
+  xlim = c(-4, 4),
+  ylim = c(0, 1),
+  xlab = "x",
+  ylab = "CDF",
+  main = "Convergence in Distribution to N(0,1)"
+)
+
+for (i in 1:length(n_values)) {
+
+  n <- n_values[i]
+
+  x <- rnorm(
+    B,
+    mean = 0,
+    sd = sqrt(1 + 1/n)
+  )
+
+  F_hat <- ecdf(x)
+
+  curve(
+    F_hat(x),
+    from = -4,
+    to = 4,
+    add = TRUE,
+    col = colors[i],
+    lwd = 2
+  )
+}
+
+# Limiting theoretical CDF
+curve(
+  pnorm(x),
+  from = -4,
+  to = 4,
+  add = TRUE,
+  col = "black",
+  lwd = 3,
+  lty = 2
+)
+
+legend(
+  "topleft",
+  legend = c(
+    paste("n =", n_values),
+    "N(0,1)"
+  ),
+  col = c(colors, "black"),
+  lwd = c(rep(2, 4), 3),
+  lty = c(rep(1, 4), 2),
+  bty = "n"
+)
+
+
+mtext(
+  "Convergence in Distribution to N(0,1)",
+  outer = TRUE,
+  cex = 1.3
+)
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+
+```
+
+
