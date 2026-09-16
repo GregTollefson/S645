@@ -9,6 +9,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+# Make an ecdf and plot it: 
+
+ x <- rnorm(500,0,1)
+ Fhat <- ecdf(x)
+ plot(Fhat)
+
+
+```
+
+
 ## R Markdown
 
 In class work for Week-4
@@ -100,7 +111,8 @@ par(
 
 for (i in 1:length(sample_size)){
   n <- sample_size[i]
-
+  xbar <- numeric(n)  # pre-allocate x_bar, since it's being updated element by element.
+                       
 for (j in 1:sim_size){
 
   x <- rnorm(n,5,2)
@@ -111,7 +123,7 @@ for (j in 1:sim_size){
 
   hist(xbar,
        probability = TRUE,
-       breaks = 100,
+       breaks = 50,
        xlim = c(2,9),
        main = paste("n = ",n)
        )
@@ -119,5 +131,65 @@ for (j in 1:sim_size){
 }
 
 ```
+```{r}
 
+# Same as above execpt using the replicate function 
+
+sample_size <- c(10, 50, 100, 1000)
+sim_size <- 10000
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0),
+  mar = c(4, 4, 3, 1),
+  las = 1
+)
+
+for (i in 1:length(sample_size)) {
+
+  n <- sample_size[i]
+
+  xbar <- replicate(       # Note, replicate is creating the vector
+    sim_size,              # then filling it.  
+    mean(rnorm(n, 5, 2))
+  )
+
+  hist(
+    xbar,
+    probability = TRUE,
+    breaks = 50,
+    xlim = c(2, 9),
+    main = paste("n =", n)
+  )
+}
+
+```
+
+```{r}
+set.seed(123)
+
+x <- rnorm(1000)
+n <- length(x)
+
+# Empirical quantile function
+plot(
+    (1:n) / n,  # plots along the x-axis - normalizes n to 1
+    sort(x),    # plots along the y-axis - returns the order statistic of x=rnorm
+    type = "s", # draw as a step function 
+    xlab = "p",
+    ylab = "Quantile",
+    main = "Empirical vs. Theoretical Normal Quantile Function"
+)
+
+# Theoretical standard normal quantile function
+p <- seq(0.001, 0.999, length.out = 1000)
+
+lines(
+    p,
+    qnorm(p),    # apply inverse-phi to the list of quantiles, takes a prob and returns a point on the z-axis 
+    col = "red",
+    lwd = 2
+)
+
+```
 

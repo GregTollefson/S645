@@ -20,7 +20,7 @@ We will use relative frequency to approximate the probability that an observatio
 
 
 
-```{r}
+```{r, echo = FALSE}
 sample_size <- c(10, 50, 100, 1000)
 
 upper_limit <- 2
@@ -48,12 +48,12 @@ for (i in 1:length(sample_size)) {
   count_slice[i] <- sum(in_slice)
   prob_slice[i]  <- mean(in_slice)
 
-  cat(
-    "n =", n,
-    "count within UL and LL =", count_slice[i],
-    "relative frequency =", prob_slice[i],
-    "\n"
-  )
+#  cat(
+#    "n =", n,
+#    "count within UL and LL =", count_slice[i],
+#    "relative frequency =", prob_slice[i],
+#    "\n"
+#  )
   
  
 
@@ -69,9 +69,28 @@ for (i in 1:length(sample_size)) {
     error = prob_slice - exact_prob
   )
 
-results
+knitr::kable(
+  results,
+  caption = "Table 1: Relative Frequency Compared with Exact Probability"
+)
 
 ```
+### Task-1 Discussion: 
+This simulation examines how the relative frequency of observations falling between 1 and 2 approaches the corresponding theoretical probability for a standard normal distribution. For each sample size \(n=10,50,100,\) and \(1000\), a random sample is generated from \(N(0,1)\). Each observation is then checked to determine whether it lies between the lower limit 1 and the upper limit 2. The number of observations in this interval is counted, and the relative frequency is calculated as the proportion of observations satisfying the condition.
+
+The theoretical probability is computed using
+
+$$
+P(1<X<2)=\Phi(2)-\Phi(1),
+$$
+
+where \(\Phi\) is the standard normal CDF. The simulated relative frequencies are then compared with this exact probability, and the difference is recorded as the simulation error. As the sample size increases, the relative frequency should generally become closer to the theoretical probability, illustrating the Law of Large Numbers.
+
+
+
+### Answer to Task-1 Question: 
+As the size of the ramdom sample increases, the error between the simulated `relative frequency` of observations between 1 and 2 and the calculates exact probability using the R function `pnorm` decreases. Table1 shows this result in the `error` column. 
+
 
 ## Task 2: Histogram as an Approximation of the Probability Density Function (PDF)
 
@@ -85,7 +104,7 @@ We will investigate how the sample size (number of simulated observations) chang
 
 
 
-```{r}
+```{r, echo=FALSE}
 sample_size <- c(10, 50, 100, 1000)
 
 par(
@@ -135,4 +154,10 @@ mtext(
 
 ```
 
+### Task-2 Discussion: 
+This simulation illustrates how a histogram constructed from a random sample approaches the theoretical probability density function of the standard normal distribution as the sample size increases. Samples of size \(n=10,50,100,\) and \(1000\) are generated from \(N(0,1)\), and a probability histogram is produced for each sample. The theoretical standard normal density curve is overlaid in red for comparison.
 
+
+
+### Answer to Task-2 Question: 
+As the sample size increases, the histogram more closely matches the shape of the standard normal density curve. This demonstrates how the empirical distribution of a large random sample provide a better approximation of the underlying population distribution.
