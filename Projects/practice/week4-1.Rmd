@@ -192,4 +192,77 @@ lines(
 )
 
 ```
+```{r}
+sample_size <- c(1, 2, 4, 5, 10, 20, 50, 100)
 
+epsilon <- 0.2
+sim_size <- 10000
+
+# One probability for each sample size
+# numeric(length(sample_size)) creates a numeric vector of length 8, initialized w/zeros
+# the prob_outlier vector is needed graphing (y-axis)
+prob_outlier <- numeric(length(sample_size))
+count_outlier <- numeric(length(sample_size))
+
+#Loop1
+# loop over the sample size vector, this is the x-axis in the graph 
+for (i in 1:length(sample_size)) {
+
+  n <- sample_size[i]  
+
+  outlier <- logical(sim_size)  # initialize a boolean vector length sim_size
+  
+  #Loop2
+  # Create the x vector and set the T/F condition based on exceeding epsilon 
+  for (j in 1:sim_size) {
+
+    x <- rnorm(20, mean = 0, sd = sqrt(2/n))
+    x_bar <- mean(x)                  # could replace with mean(rnorm(n,5,2))
+
+    outlier[j] <- abs(x_bar - 0) > epsilon
+  } # end of the simulaton loop
+
+  # Store results
+  count_outlier[i] <- sum(outlier)
+  prob_outlier[i] <- mean(outlier)
+
+  cat(
+    "n =", n,
+    "count exceeds epsilon =", count_outlier[i],
+    " outlier probability =", prob_outlier[i],
+    "\n"
+  )
+} # end of the sample size loop 
+
+# Create results table
+results <- data.frame(
+  n = sample_size,
+  count_exceeds_epsilon = count_outlier,
+  outlier_probability = prob_outlier
+)
+
+# Display table
+knitr::kable(
+  results,
+  digits = 4,
+  col.names = c(
+    "n",
+    "Count",
+    "Probability"
+  ),
+  caption = "Convergence in Probability Simulation",
+  escape = FALSE
+)
+
+
+# Plot results
+plot(
+  sample_size,
+  prob_outlier,
+  type = "b",
+  xlab = "Sample Size (n)",
+  ylab = "P(|Xbar - 0| > 0.2)",
+  main = "Convergence in Probability"
+)
+
+```
