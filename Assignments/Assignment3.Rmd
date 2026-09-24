@@ -1,0 +1,193 @@
+
+---
+title: 'Week 4 Homework'
+author: "Anna Panorska"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+fontsize: 8pt
+---
+
+The following code chunk sets up the **working directory**:
+```{r setup}
+#setwd("/Users/Documents/ania/teaching/STAT4645/STAT4645Fall2026/LecturesF26/week3new")
+```
+
+# <span style="color: red;"> Due in Canvas September 24.</span>
+
+# The usual instructions: 
+1.	Your homework has to be typed. All graphs done in R
+2.	Use full sentences to answer questions.
+3.	Do not include R-code in the solutions.
+4.	Do not include raw R output. Instead, use full sentences to answer questions.
+5.	Submit a pdf or html file to Canvas.
+
+### You should use this RMarkdown file to write your solutions in the spaces provided. Then, knit it to pdf or html and submit to Canvas. Please remember to make sure no code shows in the solution you submit for grading.
+
+###  <span style="color: red;"> Each part of every problem is worth 3 points for the total of 18 points. </span>
+
+<span style="color: red;"> The aim of this homework </span> is to study how the change in the number of simulated observations changes the results.
+
+
+### Problem 1: Cauchy distribution and the LLN 
+We will explore a distribution called Cauchy distribution. It is a symmetric distribution around zero (or some other center).The PDF of the standard Cauchy distribution is:
+$f(x) = \frac{1}{\pi}\frac{1}{1+x^2}$
+
+The goal is to see if the Cauchy distribution satisfies the LLN. To see this: 
+
+1. Generate a sample of size 1000 (or longer) from the standard Cauchy and plot the sample averages of cumulative samples, like we did for the Normal distribution to `see' the LLN. That is the points will have x-coordinate equal to the sample size varying from n=2 to n=1000, and y-coordinates will be averages of the first 2, 3, ... n observations in your sample. Include only the plot in the homework solution.
+
+**Your graph goes here.**
+```{r problem 1 part 1, fig.height = 6, fig.width = 8}
+
+set.seed(123)
+
+n <- 2000
+
+x <- rcauchy(n)
+
+sample_average <- cumsum(x) / (1:n)
+
+plot(
+  2:n,
+  sample_average[2:n],
+  type = "l",
+  xlab = "Sample Size n",
+  ylab = "Sample Average",
+  main = "Running Sample Average: Standard Cauchy"
+)
+
+abline(h = 0, lty = 2)
+
+
+```
+
+
+
+2. Run this simulation several times and observe behavior of the sample averages. Do they converge to anything? Does the Cauchy distribution obey the LLN?
+
+```{r Problem 1 part 2, fig.height = 8, fig.width = 10}
+set.seed(123)
+
+n <- 2000
+
+sample_average <- replicate(4, {
+  x <- rcauchy(n)
+  cumsum(x) / (1:n)
+})
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0),
+  mar = c(4, 4, 3, 1)
+)
+
+for (i in 1:4) {
+
+  plot(
+    2:n,
+    sample_average[2:n, i],
+    type = "l",
+    main = paste("Simulation", i),
+    xlab = "Sample Size n",
+    ylab = "Sample Average"
+  )
+
+  abline(h = 0, lty = 2)
+}
+
+mtext(
+  "Running Sample Averages: Standard Cauchy Distribution",
+  outer = TRUE,
+  line = 1,
+  cex = 1.2
+)
+
+```
+
+**Answer: ** Based on the 4 simulations in the graph above, X_bar (the sample average for a Cauchy dist) does not converge to a single number.  For example,  Simulation1 shows a possible convergence of X_bar to zero, but there is a spike at around approx.  i=1700. There the sample mean goes from 0 to 2 meaning that X_1700 is around 3400, to move X_bar by 2x.  
+
+3. Now lets see the distribution of the arithmetic average of Cauchy distributions. Plot (in one plot below) histograms of the sample averages from samples of size n=10 and n=100. Use B=1000 simulated samples for each sample size to get the observations from X_bar.
+
+**Your graph goes here.**
+
+```{r Problem 1 part 3, fig.height = 5, fig.width = 10, fig.align = "center"}
+
+sample_size <- c(10, 100)
+simulation_size <- 1000
+
+par(
+  mfrow = c(1, 2),
+  oma = c(0, 0, 3, 0),
+  mar = c(4, 4, 3, 1), 
+  las = 1
+)
+
+hist_breaks <- seq(-6, 6, by = 0.5)
+
+for (i in 1:length(sample_size)) {
+  
+  n <- sample_size[i]
+
+  # Store B = 1000 sample averages
+  x_bar <- numeric(simulation_size)
+  
+  for (j in 1:simulation_size) {
+    x_bar[j] <- mean(rcauchy(n))
+  }
+
+  x_plot <- x_bar[x_bar >= -6 & x_bar <= 6]
+
+  hist(
+    x_plot,
+    probability = TRUE,
+    breaks = hist_breaks,
+    main = paste("n =", n),
+    xlab = expression(bar(X)),
+    ylab = "Density",
+    xlim = c(-6, 6),
+    ylim = c(0, 0.4)
+  )
+
+  curve(
+    dcauchy(x),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+mtext(
+  "Distribution of Cauchy Sample Averages",
+  outer = TRUE,
+  line = 1,
+  cex = 1.4
+)
+
+
+```
+
+
+4. Do the sample averages from the Cauchy distribution behave like the sample averages from the normal distribution? Justify your answer?
+
+**Answer: ** Unlike the simulation for a Normal(0,1) distribution, increasing the sample size for Cauchy(n) does not shrink the spread of the distribution from n=10 to n=100.  
+
+## Problem 2. An illustration of convergence in distribution.
+
+In this problem we will look at the converge in distribution of exponential random variables with varying means. Let 
+
+$X_n$ have the exponential distribution with mean=$2+1/n$.
+
+Check the help file for the exponential distribution in R to see how to generate observations from an exponential with a given mean.
+
+1. Generate random samples of size 1000 from exponential distributions with n = 2, n=5, and n=10.  Plot their CDFs in different colors on a graph. Include the graph as your answer to this question below.
+
+**Your graph goes here.**
+
+```{r convergence in law, fig.height = 6, fig.width = 7, fig.align = "center"}
+
+```
+
+2. Do the CDFs seem to converge to another CDF as n increases? If yes, what is the **mean** of the limit exponential distribution?
+
+**Answer: **
