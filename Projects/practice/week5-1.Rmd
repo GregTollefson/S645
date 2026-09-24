@@ -96,6 +96,119 @@ mtext(
 
 ```{r}
 
+# Sim for Bernoulli RV, CLT demonstration 
+
+#sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
+sample_size <- c(5, 50, 200,1000)
+p = 0.5
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0)
+)
+
+
+sim_size <- 10000
+mean_vector <- numeric(sim_size)
+
+for (i in 1:length(sample_size)){
+  
+  n = sample_size[i]
+  
+  for (j in 1:sim_size){
+    x = rbinom(n, size=1, prob = p)
+    x_bar = mean(x)
+    mean_vector[j] <- x_bar
+    
+  }
+  
+  hist(
+    mean_vector,
+    probability = TRUE,
+    main = paste("n =", n),
+    xlab = "x",
+    xlim = c(0, 1),
+    ylab = "Density"
+  )
+  
+  curve(
+    dnorm(x, mean = p, sd = sqrt( p*(1-p) /n )),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+  
+  
+}
+
+mtext(
+    "CLT Simulation for Bernoulli, p=0.5",
+    outer = TRUE,
+    side = 3,
+    line = 1,
+    cex = 1.5,
+    font = 2
+  )
+```
+
+
+```{r}
+
+n=10
+
+x<- seq(from=-4, to=4, length=50)
+
+y<- pnorm(x)
+
+plot(x,
+     y,
+     main = "CDF of Normal"
+     
+     
+     )
+
+```
+
+```{r}
+
+
+n=10
+
+x<- seq(from=0, to=10, length=50)
+
+y<- pexp(x)
+
+plot(x,
+     y,
+     main = "CDF of Exponential"
+     
+     
+     )
+
+```
+
+```{r}
+
+
+n <- 100
+p <- 0.5
+
+x <- 0:n
+y <- pbinom(x, size = n, prob = p)
+
+plot(
+  x,
+  y,
+  type = "s",
+  main = "CDF of Binomial",
+  xlab = "x",
+  ylab = "F(x)",
+  ylim = c(0, 1)
+)
+
+```
+```{r}
+
 #sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
 sample_size <- c(5, 50, 200,1000)
 
@@ -124,14 +237,14 @@ for (i in 1:length(sample_size)){
     probability = TRUE,
     main = paste("n =", n),
     xlab = "x",
-    xlim = c(0, 10)
+    xlim = c(0, 10),
+    ylab = "Density"
   )
   
   curve(
-    dnorm(x, mean = 5, sd = 1 / sqrt(n)),
+    dnorm(x, mean = 5, sd = 5 / sqrt(n)),
     add = TRUE,
     col = "red",
-    ylim = 1.0,
     lwd = 2
   )
   
@@ -146,33 +259,6 @@ mtext(
     cex = 1.5,
     font = 2
   )
-```
 
-
-```{r}
-
-n=10
-
-x<- seq(from=-4, to=4, length=50)
-
-y<- pnorm(x)
-
-plot(x,y)
 
 ```
-
-```{r}
-
-
-n=10
-
-x<- seq(from=0, to=10, length=50)
-
-y<- pexp(x)
-
-plot(x,y)
-
-```
-
-
-
