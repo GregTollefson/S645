@@ -191,3 +191,209 @@ Check the help file for the exponential distribution in R to see how to generate
 2. Do the CDFs seem to converge to another CDF as n increases? If yes, what is the **mean** of the limit exponential distribution?
 
 **Answer: **
+
+
+
+## Discussion on Expectation of the Cauchy Distribution
+
+For a continuous random variable \(X\), the expected value is
+
+$$
+E[X] = \int_{-\infty}^{\infty} x f_X(x)\,dx.
+$$
+
+For a standard Cauchy random variable,
+
+$$
+X \sim \operatorname{Cauchy}(0,1),
+$$
+
+the probability density function is
+
+$$
+f_X(x) = \frac{1}{\pi(1+x^2)}.
+$$
+
+Therefore, the expected value would be
+
+$$
+E[X]
+=
+\int_{-\infty}^{\infty}
+x \frac{1}{\pi(1+x^2)}\,dx
+=
+\frac{1}{\pi}
+\int_{-\infty}^{\infty}
+\frac{x}{1+x^2}\,dx.
+$$
+
+Because this is an improper integral, we must examine the positive and negative parts separately:
+
+$$
+E[X]
+=
+\frac{1}{\pi}
+\left[
+\int_{-\infty}^{0}\frac{x}{1+x^2}\,dx
++
+\int_{0}^{\infty}\frac{x}{1+x^2}\,dx
+\right].
+$$
+
+### Positive Part
+
+Consider
+
+$$
+\frac{1}{\pi}
+\int_0^\infty
+\frac{x}{1+x^2}\,dx.
+$$
+
+Using the substitution
+
+$$
+u = 1+x^2,
+\qquad
+du = 2x\,dx,
+$$
+
+we obtain
+
+$$
+\int \frac{x}{1+x^2}\,dx
+=
+\frac{1}{2}\ln(1+x^2).
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\frac{1}{\pi}
+\int_0^\infty
+\frac{x}{1+x^2}\,dx
+&=
+\frac{1}{2\pi}
+\lim_{b\to\infty}
+\left[\ln(1+x^2)\right]_0^b \\[4pt]
+&=
+\frac{1}{2\pi}
+\lim_{b\to\infty}
+\ln(1+b^2) \\[4pt]
+&=
++\infty.
+\end{aligned}
+$$
+
+Thus,
+
+$$
+\frac{1}{\pi}
+\int_0^\infty
+\frac{x}{1+x^2}\,dx
+=
++\infty.
+$$
+
+Similarly, on the negative side,
+
+$$
+\frac{1}{\pi}
+\int_{-\infty}^{0}
+\frac{x}{1+x^2}\,dx
+=
+-\infty.
+$$
+
+Consequently, computing the expectation would require
+
+$$
+E[X] = -\infty + \infty,
+$$
+
+which is undefined. Therefore,
+
+$$
+\boxed{E[X] \text{ does not exist}.}
+$$
+
+### Connection to the Heavy Tails
+
+For large \(|x|\), the Cauchy density behaves approximately as
+
+$$
+f_X(x)
+=
+\frac{1}{\pi(1+x^2)}
+\approx
+\frac{1}{\pi x^2}.
+$$
+
+When calculating the expectation, however, the density is multiplied by \(x\):
+
+$$
+x f_X(x)
+\approx
+x\frac{1}{\pi x^2}
+=
+\frac{1}{\pi x}.
+$$
+
+Thus, the positive part of the expectation behaves like
+
+$$
+\int_1^\infty \frac{1}{\pi x}\,dx.
+$$
+
+But
+
+$$
+\int_1^b \frac{1}{x}\,dx
+=
+\ln b,
+$$
+
+and
+
+$$
+\lim_{b\to\infty}\ln b
+=
+\infty.
+$$
+
+Therefore, the heavy tails of the Cauchy distribution cause the expectation integral to diverge:
+
+$$
+\boxed{
+f_X(x)\sim\frac{1}{x^2}
+\quad\Longrightarrow\quad
+x f_X(x)\sim\frac{1}{x}
+\quad\Longrightarrow\quad
+\int_1^\infty\frac{1}{x}\,dx=\infty
+\quad\Longrightarrow\quad
+E[X]\text{ does not exist}.
+}
+$$
+
+### Why Symmetry Does Not Give a Mean of Zero
+
+The Cauchy distribution is symmetric about zero. If we force the integration limits to expand symmetrically,
+
+$$
+\lim_{a\to\infty}
+\int_{-a}^{a}
+\frac{x}{\pi(1+x^2)}\,dx
+=
+0.
+$$
+
+This is called the **Cauchy principal value**. However, the Cauchy principal value is not the same as the expected value.
+
+For the expected value to exist, the positive and negative contributions must be well-defined separately. For the Cauchy distribution, they diverge to \(+\infty\) and \(-\infty\), respectively. Therefore, despite its symmetry,
+
+$$
+\boxed{E[X]\text{ is undefined, not }0.}
+$$
+
+

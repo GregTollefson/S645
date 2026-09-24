@@ -94,13 +94,13 @@ mtext(
 
 ```
 
-```{r}
+```{r Problem 1 part 2, fig.height = 8, fig.width = 10}
 
 # Sim for Bernoulli RV, CLT demonstration 
 
 #sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
 sample_size <- c(5, 50, 200,1000)
-p = 0.5
+p = 0.3
 
 par(
   mfrow = c(2, 2),
@@ -188,7 +188,7 @@ plot(x,
 ```
 
 ```{r}
-
+# CLT Simulaton for Exponential Distribution 
 
 n <- 100
 p <- 0.5
@@ -218,7 +218,10 @@ par(
 )
 
 
-sim_size <- 10000
+sim_size <- 10000  # controls the accuracy of the histogram 
+                   # The larger the sim size, the closer the sim will get
+                   # to the actual pdf
+
 mean_vector <- numeric(sim_size)
 
 for (i in 1:length(sample_size)){
@@ -262,3 +265,29 @@ mtext(
 
 
 ```
+
+
+```{r}
+
+# Histrobram approximation of an exponential distribution.  
+
+x <- rexp(500, rate = 1/5)
+
+
+hist(x,
+     breaks = 50,
+     probability = TRUE, 
+     main = "Approximation of Exponential Distribution lambda = 5 "
+     )
+
+curve(
+    dexp(x, rate = 1/5),
+    add = TRUE,
+    col = "RED", 
+    lwd = 2
+    )
+
+```
+```{r}
+
+``
