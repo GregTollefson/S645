@@ -1,0 +1,178 @@
+x---
+title: "week5-1"
+author: "Greg T."
+date: "2026-09-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Make an ecdf and plot it: 
+
+ x <- rnorm(500,0,1)
+ Fhat <- ecdf(x)
+ plot(Fhat)
+
+
+```
+
+
+## R Markdown
+
+In class work for Week-5
+
+```{r}
+n_values <- c(1, 5, 20, 100)
+B <- 10000
+
+colors <- c("blue", "green", "orange", "purple")
+
+# Set up an empty plot
+plot(
+  NA,
+  xlim = c(-4, 4),
+  ylim = c(0, 1),
+  xlab = "x",
+  ylab = "CDF",
+  main = "Convergence in Distribution to N(0,1)"
+)
+
+for (i in 1:length(n_values)) {
+
+  n <- n_values[i]
+
+  x <- rnorm(
+    B,
+    mean = 0,
+    sd = sqrt(1 + 1/n)
+  )
+
+  F_hat <- ecdf(x)
+
+  curve(
+    F_hat(x),
+    from = -4,
+    to = 4,
+    add = TRUE,
+    col = colors[i],
+    lwd = 2
+  )
+}
+
+# Limiting theoretical CDF
+curve(
+  pnorm(x),
+  from = -4,
+  to = 4,
+  add = TRUE,
+  col = "black",
+  lwd = 3,
+  lty = 2
+)
+
+legend(
+  "topleft",
+  legend = c(
+    paste("n =", n_values),
+    "N(0,1)"
+  ),
+  col = c(colors, "black"),
+  lwd = c(rep(2, 4), 3),
+  lty = c(rep(1, 4), 2),
+  bty = "n"
+)
+
+
+mtext(
+  "Convergence in Distribution to N(0,1)",
+  outer = TRUE,
+  cex = 1.3
+)
+
+```
+
+```{r}
+
+#sample_size <- c(5, 10, 20, 50, 100, 200, 500, 1000)
+sample_size <- c(5, 50, 200,1000)
+
+par(
+  mfrow = c(2, 2),
+  oma = c(0, 0, 3, 0)
+)
+
+
+sim_size <- 10000
+mean_vector <- numeric(sim_size)
+
+for (i in 1:length(sample_size)){
+  
+  n = sample_size[i]
+  
+  for (j in 1:sim_size){
+    x = rexp(n=n, rate = 1/5)
+    x_bar = mean(x)
+    mean_vector[j] <- x_bar
+    
+  }
+  
+  hist(
+    mean_vector,
+    probability = TRUE,
+    main = paste("n =", n),
+    xlab = "x",
+    xlim = c(0, 10)
+  )
+  
+  curve(
+    dnorm(x, mean = 5, sd = 1 / sqrt(n)),
+    add = TRUE,
+    col = "red",
+    ylim = 1.0,
+    lwd = 2
+  )
+  
+  
+}
+
+mtext(
+    "CLT Simulation for exponential dist. ",
+    outer = TRUE,
+    side = 3,
+    line = 1,
+    cex = 1.5,
+    font = 2
+  )
+```
+
+
+```{r}
+
+n=10
+
+x<- seq(from=-4, to=4, length=50)
+
+y<- pnorm(x)
+
+plot(x,y)
+
+```
+
+```{r}
+
+
+n=10
+
+x<- seq(from=0, to=10, length=50)
+
+y<- pexp(x)
+
+plot(x,y)
+
+```
+
+
+
