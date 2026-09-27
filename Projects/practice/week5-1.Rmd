@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 x---
 title: "week5-1"
 author: "Greg T."
@@ -288,6 +293,3 @@ curve(
     )
 
 ```
-```{r}
-
-``
