@@ -1,0 +1,80 @@
+---
+title: "Week6 in clss work"
+author: "GregT"
+date: "2026-10-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# Function computing a CI: 
+#Samples from normal mean m, sd=stdev
+
+cifn<-function(alpha, n, m, stdev){
+  xbar<-mean(rnorm(n, mean=m, sd=stdev))
+  za2<- -qnorm(alpha/2, mean=0, sd=1)  # minus sign due to small value 
+  #cat("z_alpha/2=", za2, "\n")
+  #print(za2)
+  lft<-xbar-(za2)*(stdev)/sqrt(n)
+  rht<-xbar+(za2)*(stdev)/sqrt(n)
+  #cat("The required CI is: (", lft,  rht, ")", "n=", n, "\n" )
+  out<-c(lft, rht)
+out
+}
+
+cifn(alpha = 0.05, n = 100, m = 2, stdev = 4)
+
+```
+```{r}
+B=1000
+
+rel_freq <- numeric(B)
+m = 1
+stdev = 4
+sum = 0
+
+for (i in 1:B) {
+  
+  rel_freq <- cifn(alpha = 0.05, n = 100, m, stdev)
+  
+    if (m > rel_freq[1] && m < rel_freq[2])
+    sum = sum + 1
+  
+}
+  
+cat(sum/B)
+  
+
+```
+```{r}
+
+n = 100
+x <-  rnorm(n)
+x_bar <- mean(x)
+
+for (i in 1:n) {
+     var_from_mean <- x[i] - x_bar
+} 
+       
+s_sq = 1/(n-1)*var_from_mean^2
+
+
+s = sqrt(s_sq)
+
+x_sim <- rnorm(n, x_bar, s)
+
+
+
+hist(x_sim)
+
+
+```
+
+
+
+
+
