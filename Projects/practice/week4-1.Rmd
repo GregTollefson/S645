@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 x---
 title: "week4-1"
 author: "Greg T."
@@ -192,15 +197,20 @@ lines(
 )
 
 ```
+
+
+## Simulation for Convergence in Probability of a Random Normal 
 ```{r}
-sample_size <- c(1, 2, 4, 5, 10, 20, 50, 100)
+
+# 
+sample_size <- c(1, 2, 4, 5, 10, 20, 50, 100, 200, 500, 1000)
 
 epsilon <- 0.2
 sim_size <- 10000
 
 # One probability for each sample size
 # numeric(length(sample_size)) creates a numeric vector of length 8, initialized w/zeros
-# the prob_outlier vector is needed graphing (y-axis)
+# the prob_outlier vector is needed for graphing (y-axis)
 prob_outlier <- numeric(length(sample_size))
 count_outlier <- numeric(length(sample_size))
 
@@ -216,15 +226,23 @@ for (i in 1:length(sample_size)) {
   # Create the x vector and set the T/F condition based on exceeding epsilon 
   for (j in 1:sim_size) {
 
-    x <- rnorm(20, mean = 0, sd = sqrt(2/n))
+    # for each of the 10K simulations: 
+      # create a random vector of size n
+      # find the mean of that vector
+      # check if the mean is larger than epsilon, update outlier if yes
+    
+    x <- rnorm(n, mean = 0, sd = sqrt(2))
     x_bar <- mean(x)                  # could replace with mean(rnorm(n,5,2))
 
     outlier[j] <- abs(x_bar - 0) > epsilon
   } # end of the simulaton loop
 
-  # Store results
-  count_outlier[i] <- sum(outlier)
-  prob_outlier[i] <- mean(outlier)
+  # For each element in the sample size vector. 
+    # find absolute count of outliers over the 10k sims
+    # calc relative frequency of outliers over the 10k sims
+  
+  count_outlier[i] <- sum(outlier)  
+  prob_outlier[i] <- mean(outlier) 
 
   cat(
     "n =", n,
@@ -237,7 +255,8 @@ for (i in 1:length(sample_size)) {
 # Create results table
 results <- data.frame(
   n = sample_size,
-  count_exceeds_epsilon = count_outlier,
+  # left side is the col name for the table.  
+  count_exceeds_epsilon = count_outlier,  
   outlier_probability = prob_outlier
 )
 

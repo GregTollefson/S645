@@ -35,10 +35,10 @@ $f(x) = \frac{1}{\pi}\frac{1}{1+x^2}$
 
 The goal is to see if the Cauchy distribution satisfies the LLN. To see this: 
 
-1. Generate a sample of size 1000 (or longer) from the standard Cauchy and plot the sample averages of cumulative samples, like we did for the Normal distribution to `see' the LLN. That is the points will have x-coordinate equal to the sample size varying from n=2 to n=1000, and y-coordinates will be averages of the first 2, 3, ... n observations in your sample. Include only the plot in the homework solution.
+**Question-1.1:** Generate a sample of size 1000 (or longer) from the standard Cauchy and plot the sample averages of cumulative samples, like we did for the Normal distribution to `see' the LLN. That is the points will have x-coordinate equal to the sample size varying from n=2 to n=1000, and y-coordinates will be averages of the first 2, 3, ... n observations in your sample. Include only the plot in the homework solution.
 
 **Your graph goes here.**
-```{r problem 1 part 1, fig.height = 6, fig.width = 8}
+```{r problem 1 part 1, fig.height = 6, fig.width = 8, echo=FALSE}
 
 set.seed(123)
 
@@ -64,16 +64,16 @@ abline(h = 0, lty = 2)
 
 
 
-2. Run this simulation several times and observe behavior of the sample averages. Do they converge to anything? Does the Cauchy distribution obey the LLN?
+**Question-1.2:**  Run this simulation several times and observe behavior of the sample averages. Do they converge to anything? Does the Cauchy distribution obey the LLN?
 
-```{r Problem 1 part 2, fig.height = 8, fig.width = 10}
+```{r Problem 1 part 2, fig.height = 8, fig.width = 10, echo=FALSE}
 set.seed(123)
 
 n <- 2000
 
-sample_average <- replicate(4, {
+sample_average <- replicate(4, {   # create 4 plots of the sample mean to show different dist's with different random seeds 
   x <- rcauchy(n)
-  cumsum(x) / (1:n)
+  cumsum(x) / (1:n)  # create a vector of the running sample mean
 })
 
 par(
@@ -105,13 +105,13 @@ mtext(
 
 ```
 
-**Answer: ** Based on the 4 simulations in the graph above, X_bar (the sample average for a Cauchy dist) does not converge to a single number.  For example,  Simulation1 shows a possible convergence of X_bar to zero, but there is a spike at around approx.  i=1700. There the sample mean goes from 0 to 2 meaning that X_1700 is around 3400, to move X_bar by 2x.  
+**Answer: ** Based on the 4 simulations in the graph above, $\bar{X}$ (the sample average for a Cauchy dist) does not converge to a single number.  For example,  Simulation1 shows a possible convergence of $\bar{X}$ to zero, but there is a spike near the 1750th observation. There the sample mean goes from 0 to 2, caused by a large observation of $X_{1750} \approx 3500$.  This is a large but not impossible value, given the heavy tails of the Cauchy distribution.  Note, the 4 simulations look different.  This is due to random seed changing for each graph, giving further evidence of the non-converging nature of the Cauchy distribution.  
 
-3. Now lets see the distribution of the arithmetic average of Cauchy distributions. Plot (in one plot below) histograms of the sample averages from samples of size n=10 and n=100. Use B=1000 simulated samples for each sample size to get the observations from X_bar.
+**Question-1.3** Now lets see the distribution of the arithmetic average of Cauchy distributions. Plot (in one plot below) histograms of the sample averages from samples of size n=10 and n=100. Use B=1000 simulated samples for each sample size to get the observations from X_bar.
 
 **Your graph goes here.**
 
-```{r Problem 1 part 3, fig.height = 5, fig.width = 10, fig.align = "center"}
+```{r Problem 1 part 3, fig.height = 5, fig.width = 10, fig.align = "center", echo=FALSE}
 
 sample_size <- c(10, 100)
 simulation_size <- 1000
@@ -168,9 +168,10 @@ mtext(
 ```
 
 
-4. Do the sample averages from the Cauchy distribution behave like the sample averages from the normal distribution? Justify your answer?
+**Question-1.4:** Do the sample averages from the Cauchy distribution behave like the sample averages from the normal distribution? Justify your answer?
 
-**Answer: ** Unlike the simulation for a Normal(0,1) distribution, increasing the sample size for Cauchy(n) does not shrink the spread of the distribution from n=10 to n=100.  
+**Answer: ** Unlike the simulation for a Normal(0,1) distribution, increasing the sample size for Cauchy(n) does not shrink the spread of the distribution as n increases from 10 to 100.  Although there is an arithmetic average of the Cauchy sample, and the values observations cluster towards this average (as shown in the graphs).  But since the mean of a Cauchy distribution does not exist, there is nothing for $\bar{X}$ to converge to, so the two histograms look similar for the different values of n.  
+
 
 ## Problem 2. An illustration of convergence in distribution.
 
@@ -180,21 +181,90 @@ $X_n$ have the exponential distribution with mean=$2+1/n$.
 
 Check the help file for the exponential distribution in R to see how to generate observations from an exponential with a given mean.
 
-1. Generate random samples of size 1000 from exponential distributions with n = 2, n=5, and n=10.  Plot their CDFs in different colors on a graph. Include the graph as your answer to this question below.
+**Question2.1:** Generate random samples of size 1000 from exponential distributions with n = 2, n=5, and n=10.  Plot their CDFs in different colors on a graph. Include the graph as your answer to this question below.
 
 **Your graph goes here.**
 
-```{r convergence in law, fig.height = 6, fig.width = 7, fig.align = "center"}
+```{r convergence in law, fig.height = 6, fig.width = 7, fig.align = "center", echo=FALSE}
+n_values <- c(2, 5, 10)
+B <- 10000
+
+colors <- c("green", "orange", "purple")
+
+# Set up an empty plot
+plot(
+  NA,
+  xlim = c(0, 10),
+  ylim = c(0, 1),
+  xlab = "x",
+  ylab = "CDF",
+  main = "Convergence in Distribution to exp(rate=1/2)"
+)
+
+for (i in 1:length(n_values)) {
+
+  n <- n_values[i]
+
+  x <- rexp(
+    B,
+    rate = 1/(1 + 1/n)
+  )
+
+  F_hat <- ecdf(x)
+
+  curve(
+    F_hat(x),
+    from = 0,
+    to = 10,
+    add = TRUE,
+    col = colors[i],
+    lwd = 2
+  )
+}
+
+# Limiting theoretical CDF
+curve(
+  pexp(x),
+  from = 0,
+  to = 10,
+  add = TRUE,
+  col = "black",
+  lwd = 3,
+  lty = 2
+)
+
+legend(
+  "bottomright",
+  legend = c(
+    paste("n =", n_values),
+    "exp(rate=1/2)"
+  ),
+  col = c(colors, "black"),
+  lwd = c(rep(2, 4), 3),
+  lty = c(rep(1, 4), 2),
+  bty = "n"
+)
+
+
+mtext(
+  "Convergence in Distribution to exp(rate=1/2)",
+  outer = TRUE,
+  cex = 1.3
+)
 
 ```
 
-2. Do the CDFs seem to converge to another CDF as n increases? If yes, what is the **mean** of the limit exponential distribution?
+**Question2.2:** Do the CDFs seem to converge to another CDF as n increases? If yes, what is the **mean** of the limit exponential distribution?
 
-**Answer: **
+**Answer: **  The simulation generates CDF's for the exponential distribution where the **rate** parameter varies as a function of n.  Four curves are generated for the **rate**  parameter, equal to $\frac{1}{2 + \frac{1}{n}}$  As n increases the resulting curves get closed to the true CDF of **exp(rate=1/2)**
 
 
 
-## Discussion on Expectation of the Cauchy Distribution
+
+
+**Note: The following math is added personal future reference.**
+
+### Discussion on Expectation of the Cauchy Distribution
 
 For a continuous random variable \(X\), the expected value is
 
