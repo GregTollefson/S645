@@ -51,8 +51,9 @@ plot(1:n, rel_freq,
 
 abline(h = pnorm(1), lty = 2)
 ```
-## Method-2 using cumsum, similar to class
 
+
+## Method-2 using cumsum, similar to class
 
 ```{r}
 set.seed(123)

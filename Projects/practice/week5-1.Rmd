@@ -293,3 +293,38 @@ curve(
     )
 
 ```
+```{r}
+
+x <- rnorm(1000, 0, 1)
+
+hist(x, probability = TRUE, breaks=50)
+plot(dnorm, add=TRUE, from = -5, to = 5, col = "RED")
+
+x <- rexp(1000, rate = 1)
+
+p <- ppoints(1000)
+q <- qexp(p, rate = 1)
+
+qqplot(q, x)
+abline(0, 1)
+
+
+```
+```{r}
+
+x <- rnorm(1000, 0, 1)
+
+hist(x, probability = TRUE, breaks=50)
+plot(dnorm, add=TRUE, from = -5, to = 5, col = "RED")
+
+
+x <- rnorm(1000,0,1 )
+
+
+qqnorm(x)
+qqline(x)
+
+
+```
+
+
