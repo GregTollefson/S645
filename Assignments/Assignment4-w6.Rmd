@@ -1,0 +1,98 @@
+
+---
+title: "Week 6 Homework"
+author: "Greg Tollefson "
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+fontsize: 8pt
+---
+
+The following code chunk sets up the **working directory**:
+```{r setup}
+#setwd("/Users/Documents/ania/teaching/STAT4645/STAT4645Fall2026/LecturesF26/week3new")
+```
+
+# <span style="color: red;"> Due in Canvas October 8.</span>
+
+# The usual instructions: 
+1.	Your homework has to be typed. All graphs done in R
+2.	Use full sentences to answer questions.
+3.	Do not include R-code in the solutions.
+4.	Do not include raw R output. Instead, use full sentences to answer questions.
+5.	Submit a pdf or html file to Canvas.
+
+### You should use this RMarkdown file to write your solutions in the spaces provided. Then, knit it to pdf or html and submit to Canvas. Please remember to make sure no code shows in the solution you submit for grading.
+
+###  \textcolor{red}{This homework is worth 5 points.} 
+
+<span style="color: red;"> The aim of this homework </span> is to find the coverage probability of a confidence interval. 
+
+
+### Problem-1: Confidence interval for the mean of an exponential distribution. 
+
+Approximate the coverage probability for the following confidence interval  for the mean of an exponential distribution: $\bar{x} +/- 1$ for samples coming from the exponential distribution with mean 10. Use any sample size you think is reasonable to estimate this probability.
+
+
+**Answer: The coverage probability is (about) .....**
+
+
+
+
+```{r, echo=FALSE}
+
+n = 100
+B <- 10000
+
+mu <- 10
+lambda <- 1/mu
+alpha <- 0.05
+
+covered <- 0
+
+
+
+  for (j in seq_len(B)){
+      
+    x <- rexp(n, rate = lambda)
+    xbar <- mean(x)
+    
+    lower <- xbar - 1
+    upper <- xbar + 1
+      
+    if ((lower < mu) && (mu < upper)){
+      covered <- covered + 1
+    }
+      
+  }
+  
+    coverage_prob <- covered / B
+    
+    #coverage_prob 
+  
+  
+
+
+```
+### <span style="color: blue;"> Answer to Problem-1</span>
+
+#### Simulation of Coverage Probability for a Confidence Interval. 
+
+For this simulation, the following parameters were used:
+
+- Sample size: \(n = 100\)
+- Number simulations: \(B = 10{,}000\)
+- Population mean: \(\mu = 10\)
+- Exponential rate parameter: \(\lambda = 1/\mu = 0.1\)
+- Confidence interval: \(\bar{X} \pm 1\)
+
+
+**Result:** The estimated coverage probability was
+
+\[
+\boxed{\widehat{P}(\text{coverage}) = 0.6839}.
+\]
+
+Thus, approximately **68.39%** of the simulated confidence intervals contained the true population mean of 10.
