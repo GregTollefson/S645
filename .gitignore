@@ -22,3 +22,6 @@ Lectures/
 
 # Ignore provided templates for assignments
 Assignments/provided/
+
+#Ignore practice code 
+Practice
